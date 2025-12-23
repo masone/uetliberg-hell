@@ -2,13 +2,77 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Webcam Viewer</title>
+    <title>Uetliberg hell?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body {
         margin: 0;
-        background: #c53a25;
+        background: #2F3336;
+        color: white;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
+      h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+      p {
+        font-size: 1.5rem;
+        opacity: 0.8;
+      }
+      .loading {
+        opacity: 0.2;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 0.2;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.2;
+        }
       }
     </style>
   </head>
-  <body></body>
+  <body>
+    <div id="content">
+      <h1 class="loading">Loading...</h1>
+    </div>
+
+    <script>
+      async function checkStatus() {
+        try {
+          const response = await fetch("/api/status");
+          const data = await response.json();
+
+          const isHell = data.hell;
+          const text = isHell
+            ? "hell!"
+            : "dunkel.";
+
+          document.body.style.background = isHell ? "#c53a25" : "#2F3336"; 
+
+          document.getElementById("content").innerHTML = `
+            <h1>Uetliberg ${text}</h1>
+          `;
+        } catch (e) {
+          document.getElementById("content").innerHTML =
+            `<h1>Error loading status</h1>`;
+          console.error(e);
+        }
+      }
+
+      checkStatus();
+    </script>
+  </body>
 </html>
