@@ -1,0 +1,27 @@
+{
+  "name": "uetzgi-hell",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "fetch-webcam": "ts-node fetch-webcam.ts",
+    "fix": "prettier --write .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.0",
+    "ai": "^6.0.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
