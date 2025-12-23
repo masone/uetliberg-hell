@@ -9,9 +9,9 @@ export interface WebcamMetadata {
   timestamp: number;
 }
 
-function roundTo10Minutes(date: Date): Date {
+function roundTo20Minutes(date: Date): Date {
   const minutes = date.getMinutes();
-  const roundedMinutes = Math.floor(minutes / 10) * 10;
+  const roundedMinutes = Math.floor(minutes / 20) * 20;
   const rounded = new Date(date);
   rounded.setMinutes(roundedMinutes, 0, 0);
   return rounded;
@@ -23,11 +23,25 @@ function formatDateTime(date: Date): {
   timestamp: number;
   filename: string;
 } {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
+  // Use Zurich time explicitly
+  const formatter = new Intl.DateTimeFormat("de-CH", {
+    timeZone: "Europe/Zurich",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
+  const parts = formatter.formatToParts(date);
+  const getPart = (type: string) => parts.find((p) => p.type === type)?.value || "";
+
+  const year = getPart("year");
+  const month = getPart("month");
+  const day = getPart("day");
+  const hours = getPart("hour");
+  const minutes = getPart("minute");
 
   return {
     date: `${year}-${month}-${day}`,
@@ -60,7 +74,7 @@ export async function latestWebcamMetadata(): Promise<WebcamMetadata> {
   // 5 minute grace period for image upload
   const gracePeriod = 5 * 60 * 1000;
   const adjustedNow = new Date(now.getTime() - gracePeriod);
-  const currentTime = roundTo10Minutes(adjustedNow);
+  const currentTime = roundTo20Minutes(adjustedNow);
   const { date, time, filename, timestamp } = formatDateTime(currentTime);
 
   console.log(
