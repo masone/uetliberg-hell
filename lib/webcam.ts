@@ -1,5 +1,3 @@
-import { time } from "console";
-
 const BASE_URL = "https://storage2.roundshot.com/53aacd05e65407.10715840";
 
 export interface WebcamMetadata {
@@ -35,7 +33,8 @@ function formatDateTime(date: Date): {
   });
 
   const parts = formatter.formatToParts(date);
-  const getPart = (type: string) => parts.find((p) => p.type === type)?.value || "";
+  const getPart = (type: string) =>
+    parts.find((p) => p.type === type)?.value || "";
 
   const year = getPart("year");
   const month = getPart("month");
