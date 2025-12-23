@@ -1,8 +1,5 @@
-import dotenv from "dotenv";
 import type { IncomingMessage, ServerResponse } from "http";
 import { isHell } from "..";
-
-dotenv.config();
 
 export default async function handler(
   _req: IncomingMessage,
@@ -12,7 +9,8 @@ export default async function handler(
     const result = await isHell();
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify(result));
+    res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate");
+    res.end(JSON.stringify({ hell: result }));
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     res.statusCode = 500;
