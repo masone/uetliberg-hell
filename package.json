@@ -7,16 +7,15 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node ./api/run.ts",
     "build": "tsc",
-    "fetch-webcam": "ts-node fetch-webcam.ts",
-    "fix": "prettier --write .",
-    "format": "prettier --check .",
-    "recognize-image": "ts-node -e \"import { recognizeImage } from './image-recognition'; const sepIndex = process.argv.indexOf('--'); const args = sepIndex >= 0 ? process.argv.slice(sepIndex + 1) : process.argv.slice(2); const image = args[0]; if (!image) { console.error('Usage: npm run recognize-image -- <imageFileName>'); process.exit(1); } recognizeImage(image).then((res) => { console.log(JSON.stringify(res, null, 2)); }).catch((err) => { console.error(err); process.exit(1); });\" --"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.0",
+    "@vercel/blob": "^2.0.0",
     "ai": "^6.0.1",
+    "dotenv": "^16.6.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {

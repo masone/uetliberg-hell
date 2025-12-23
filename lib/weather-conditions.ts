@@ -1,10 +1,10 @@
-import path from "path";
-import { readFile } from "fs/promises";
 import { generateText, type ModelMessage, type UserContent } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 
-const visionModel = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })("gpt-4-turbo");
+const visionModel = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })(
+  "gpt-4-turbo",
+);
 
 const responseSchema = z.object({
   fogClear: z.boolean(),
@@ -14,11 +14,9 @@ const responseSchema = z.object({
 
 export type ImageRecognitionResult = z.infer<typeof responseSchema>;
 
-export async function recognizeImage(
-  imageFileName: string,
+export async function describeWeatherConditions(
+  imageBuffer: Buffer,
 ): Promise<ImageRecognitionResult> {
-  const imagePath = path.resolve("images", imageFileName);
-
   const systemPrompt =
     "You are reviewing the weather conditions on a webcam image. The scenery always shows a city in the valley on the left side with a mountain ridge covered in forest on the right side. There is a small road leading up to a large building in the foreground with an observation tower nearby.";
 
@@ -31,14 +29,7 @@ export async function recognizeImage(
     `- clear: true only when fogClear AND sunshine are both true; otherwise false.\n` +
     `Keep JSON compact, no trailing text.`;
 
-  const imageFile = {
-    type: "file" as const,
-    name: imageFileName,
-    data: await readFile(imagePath),
-    mimeType: "image/jpeg",
-  };
-
-  const imageDataUrl = `data:${imageFile.mimeType};base64,${imageFile.data.toString(
+  const imageDataUrl = `data:image/jpeg;base64,${imageBuffer.toString(
     "base64",
   )}`;
 

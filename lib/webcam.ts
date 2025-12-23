@@ -1,0 +1,74 @@
+import { time } from "console";
+
+const BASE_URL = "https://storage2.roundshot.com/53aacd05e65407.10715840";
+
+export interface WebcamMetadata {
+  date: string;
+  time: string;
+  filename: string;
+  timestamp: number;
+}
+
+function roundTo20Minutes(date: Date): Date {
+  const minutes = date.getMinutes();
+  const roundedMinutes = Math.floor(minutes / 20) * 20;
+  const rounded = new Date(date);
+  rounded.setMinutes(roundedMinutes, 0, 0);
+  return rounded;
+}
+
+function formatDateTime(date: Date): {
+  date: string;
+  time: string;
+  timestamp: number;
+  filename: string;
+} {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return {
+    date: `${year}-${month}-${day}`,
+    time: `${hours}-${minutes}-00`,
+    timestamp: date.getTime(),
+    filename: `${year}-${month}-${day}-${hours}-${minutes}-00_oneeighth.jpg`,
+  };
+}
+
+export async function downloadImage({
+  date,
+  time,
+  filename,
+}: {
+  date: string;
+  time: string;
+  filename: string;
+}): Promise<Buffer> {
+  const url = `${BASE_URL}/${date}/${time}/${filename}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    console.log(`Failed to download image`, { url, response });
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
+
+export async function latestWebcamMetadata(): Promise<WebcamMetadata> {
+  const now = new Date();
+  // 5 minute grace period for image upload
+  const gracePeriod = 5 * 60 * 1000;
+  const adjustedNow = new Date(now.getTime() - gracePeriod);
+  const currentTime = roundTo20Minutes(adjustedNow);
+  const { date, time, filename, timestamp } = formatDateTime(currentTime);
+
+  console.log(
+    `Downloading latest interval: ${date} ${time.replace(/-/g, ":")}...`,
+  );
+
+  return { date, time, filename, timestamp };
+}
