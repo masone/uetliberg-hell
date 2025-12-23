@@ -7,7 +7,7 @@
     <style>
       body {
         margin: 0;
-        background: #2F3336;
+        background: #2f3336;
         color: white;
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
@@ -22,6 +22,10 @@
       h1 {
         font-size: 4rem;
         margin-bottom: 1rem;
+      }
+      h1 a {
+        color: inherit;
+        text-decoration: none;
       }
       p {
         font-size: 1.5rem;
@@ -56,14 +60,12 @@
           const data = await response.json();
 
           const isHell = data.hell;
-          const text = isHell
-            ? "hell!"
-            : "dunkel.";
+          const text = isHell ? "hell!" : "grau.";
 
-          document.body.style.background = isHell ? "#c53a25" : "#2F3336"; 
+          document.body.style.background = isHell ? "#c53a25" : "#2F3336";
 
           document.getElementById("content").innerHTML = `
-            <h1>Uetliberg ${text}</h1>
+            <h1><a href="${data.proof || "https://uetliberg.roundshot.com/"}">Uetliberg ${text}</a></h1>
           `;
         } catch (e) {
           document.getElementById("content").innerHTML =

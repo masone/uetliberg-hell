@@ -9,9 +9,9 @@ export interface WebcamMetadata {
   timestamp: number;
 }
 
-function roundTo20Minutes(date: Date): Date {
+function roundTo10Minutes(date: Date): Date {
   const minutes = date.getMinutes();
-  const roundedMinutes = Math.floor(minutes / 20) * 20;
+  const roundedMinutes = Math.floor(minutes / 10) * 10;
   const rounded = new Date(date);
   rounded.setMinutes(roundedMinutes, 0, 0);
   return rounded;
@@ -37,16 +37,13 @@ function formatDateTime(date: Date): {
   };
 }
 
-export async function downloadImage({
-  date,
-  time,
-  filename,
-}: {
-  date: string;
-  time: string;
-  filename: string;
-}): Promise<Buffer> {
-  const url = `${BASE_URL}/${date}/${time}/${filename}`;
+export function originalUrl(metadata: WebcamMetadata): string {
+  const { date, time, filename } = metadata;
+  return `${BASE_URL}/${date}/${time}/${filename}`;
+}
+
+export async function downloadImage(metadata: WebcamMetadata): Promise<Buffer> {
+  const url = originalUrl(metadata);
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -63,7 +60,7 @@ export async function latestWebcamMetadata(): Promise<WebcamMetadata> {
   // 5 minute grace period for image upload
   const gracePeriod = 5 * 60 * 1000;
   const adjustedNow = new Date(now.getTime() - gracePeriod);
-  const currentTime = roundTo20Minutes(adjustedNow);
+  const currentTime = roundTo10Minutes(adjustedNow);
   const { date, time, filename, timestamp } = formatDateTime(currentTime);
 
   console.log(

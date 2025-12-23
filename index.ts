@@ -1,10 +1,15 @@
 import { describeWeatherConditions } from "./lib/weather-conditions";
-import { latestWebcamMetadata, downloadImage } from "./lib/webcam";
+import { latestWebcamMetadata, downloadImage, originalUrl } from "./lib/webcam";
 import { getCache } from "./lib/cache";
 
 const IMAGES_DIR = "images";
 
-export async function isHell(): Promise<boolean> {
+interface Status {
+  clear: boolean;
+  originalUrl: string;
+}
+
+export async function isHell(): Promise<Status> {
   const metadata = await latestWebcamMetadata();
   const filepath = `${IMAGES_DIR}/${metadata.filename}`;
   const buffer = await getCache(filepath, () => downloadImage(metadata));
@@ -18,5 +23,5 @@ export async function isHell(): Promise<boolean> {
   const result = JSON.parse(resultJson.toString());
 
   console.log({ metadata, filepath, result });
-  return result.clear;
+  return { clear: result.clear, originalUrl: originalUrl(metadata) };
 }
