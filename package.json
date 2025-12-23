@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vc dev",
-    "run": "ts-node ./api/run.ts",
+    "test": "ts-node ./api/run.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write ."
   },
