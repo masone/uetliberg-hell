@@ -11,7 +11,8 @@
     "build": "tsc",
     "fetch-webcam": "ts-node fetch-webcam.ts",
     "fix": "prettier --write .",
-    "format": "prettier --check ."
+    "format": "prettier --check .",
+    "recognize-image": "ts-node -e \"import { recognizeImage } from './image-recognition'; const sepIndex = process.argv.indexOf('--'); const args = sepIndex >= 0 ? process.argv.slice(sepIndex + 1) : process.argv.slice(2); const image = args[0]; if (!image) { console.error('Usage: npm run recognize-image -- <imageFileName>'); process.exit(1); } recognizeImage(image).then((res) => { console.log(JSON.stringify(res, null, 2)); }).catch((err) => { console.error(err); process.exit(1); });\" --"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.0",
