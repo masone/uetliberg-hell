@@ -7,6 +7,7 @@ const IMAGES_DIR = "images";
 interface Status {
   clear: boolean;
   originalUrl: string;
+  nextUpdate: number;
 }
 
 export async function isHell(): Promise<Status> {
@@ -23,5 +24,9 @@ export async function isHell(): Promise<Status> {
   const result = JSON.parse(resultJson.toString());
 
   console.log({ metadata, filepath, result });
-  return { clear: result.clear, originalUrl: originalUrl(metadata) };
+  return {
+    clear: result.clear,
+    originalUrl: originalUrl(metadata),
+    nextUpdate: metadata.nextUpdate,
+  };
 }

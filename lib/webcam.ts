@@ -5,6 +5,7 @@ export interface WebcamMetadata {
   time: string;
   filename: string;
   timestamp: number;
+  nextUpdate: number;
 }
 
 function roundTo20Minutes(date: Date): Date {
@@ -80,5 +81,8 @@ export async function latestWebcamMetadata(): Promise<WebcamMetadata> {
     `Downloading latest interval: ${date} ${time.replace(/-/g, ":")}...`,
   );
 
-  return { date, time, filename, timestamp };
+  // The next image is available 20 minutes after the current one + grace period
+  const nextUpdate = timestamp + 20 * 60 * 1000 + gracePeriod;
+
+  return { date, time, filename, timestamp, nextUpdate };
 }

@@ -6,12 +6,11 @@ export default async function handler(
   res: ServerResponse,
 ) {
   try {
-    const { clear, originalUrl } = await isHell();
+    const { clear, originalUrl, nextUpdate } = await isHell();
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
-    if (process.env.NODE_ENV === "production") {
-      res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate");
-    }
+    res.setHeader("Expires", new Date(nextUpdate).toUTCString());
+    res.setHeader("Cache-Control", "public");
     res.end(JSON.stringify({ hell: clear, proof: originalUrl }));
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
