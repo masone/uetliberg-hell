@@ -31,33 +31,90 @@
         font-size: 1.5rem;
         opacity: 0.8;
       }
-      .loading {
-        opacity: 0.2;
-        animation: pulse 1.5s infinite;
+      #loading-text {
+        transition: opacity 0.15s ease-in-out;
       }
-      @keyframes pulse {
-        0% {
-          opacity: 0.2;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.2;
-        }
+      #loading-text.fade-out {
+        opacity: 0;
       }
     </style>
   </head>
   <body>
     <div id="content">
-      <h1 class="loading">Loading...</h1>
+      <h1 id="loading-text" class="loading-text">Loading...</h1>
     </div>
 
     <script>
+      const loadingMessages = [
+        "Inspecting webcam...",
+        "Spinning up AI...",
+        "Detecting cloud cover...",
+        "Checking for fog...",
+        "Measuring sunlight...",
+        "Consulting weather gods...",
+        "Analyzing vibes...",
+      ];
+
+      const fixed = loadingMessages.slice(0, 2);
+      const shuffled = loadingMessages.slice(2).sort(() => Math.random() - 0.5);
+      const displayMessages = [...fixed, ...shuffled];
+
+      let messageIndex = 0;
+      const loadingElement = document.getElementById("loading-text");
+
+      const initialDelay = 500;
+      const cycleDuration = 800;
+      const fadeDuration = 150;
+      let startTimeoutId;
+      let cycleIntervalId;
+      let fadeTimeoutId;
+      let isLoading = false;
+
+      function cycleLoadingText() {
+        if (!loadingElement || !isLoading) return;
+
+        loadingElement.classList.add("fade-out");
+
+        fadeTimeoutId = setTimeout(() => {
+          if (loadingElement && isLoading) {
+            loadingElement.textContent = displayMessages[messageIndex];
+            loadingElement.classList.remove("fade-out");
+            messageIndex = (messageIndex + 1) % displayMessages.length;
+          }
+        }, fadeDuration);
+      }
+
+      function startLoading() {
+        if (!loadingElement) return;
+        isLoading = true;
+
+        startTimeoutId = setTimeout(() => {
+          if (!isLoading) return;
+          cycleLoadingText();
+          cycleIntervalId = setInterval(cycleLoadingText, cycleDuration);
+        }, initialDelay);
+      }
+
+      function stopLoading() {
+        isLoading = false;
+        clearTimeout(startTimeoutId);
+        clearInterval(cycleIntervalId);
+        clearTimeout(fadeTimeoutId);
+      }
+
+      startLoading();
+
       async function checkStatus() {
         try {
           const response = await fetch("/api/status");
           const data = await response.json();
+
+          stopLoading();
+
+          if (loadingElement) {
+            loadingElement.classList.add("fade-out");
+            await new Promise((resolve) => setTimeout(resolve, fadeDuration));
+          }
 
           const isHell = data.hell;
           const text = isHell ? "hell!" : "grau.";
@@ -68,6 +125,7 @@
             <h1><a href="${data.proof || "https://uetliberg.roundshot.com/"}">Uetliberg ${text}</a></h1>
           `;
         } catch (e) {
+          stopLoading();
           document.getElementById("content").innerHTML =
             `<h1>Error loading status</h1>`;
           console.error(e);
