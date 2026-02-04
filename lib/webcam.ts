@@ -1,4 +1,5 @@
 const BASE_URL = "https://storage2.roundshot.com/53aacd05e65407.10715840";
+import sharp from "sharp";
 
 export interface WebcamMetadata {
   date: string;
@@ -66,7 +67,24 @@ export async function downloadImage(metadata: WebcamMetadata): Promise<Buffer> {
   }
 
   const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
+  const buffer = Buffer.from(arrayBuffer);
+  
+  // Get image metadata to calculate crop properly
+  const image = sharp(buffer);
+  const metadata_info = await image.metadata();
+  
+  if (!metadata_info.width || !metadata_info.height) {
+    throw new Error("Unable to read image dimensions");
+  }
+  
+  // Remove leftmost 500px and rightmost 90px, then compress
+  const cropLeft = 500;
+  const cropRight = 90;
+  const cropWidth = metadata_info.width - cropLeft - cropRight;
+  return await sharp(buffer)
+    .extract({ left: cropLeft, top: 0, width: cropWidth, height: metadata_info.height })
+    .jpeg({ quality: 70, progressive: true }) // Compress JPEG
+    .toBuffer();
 }
 
 export async function latestWebcamMetadata(): Promise<WebcamMetadata> {
