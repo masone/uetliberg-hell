@@ -111,6 +111,12 @@
 
           stopLoading();
 
+          if (!response.ok) {
+            document.getElementById("content").innerHTML =
+              `<h1>Error loading status</h1><p>${data.error || "Unknown error"}</p>`;
+            return;
+          }
+
           if (loadingElement) {
             loadingElement.classList.add("fade-out");
             await new Promise((resolve) => setTimeout(resolve, fadeDuration));
