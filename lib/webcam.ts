@@ -82,6 +82,7 @@ export async function downloadImage(metadata: WebcamMetadata): Promise<Buffer> {
   const cropWidth = metadata_info.width - cropLeft - cropRight;
   const cropped = await sharp(buffer)
     .extract({ left: cropLeft, top: 0, width: cropWidth, height: metadata_info.height })
+    .resize(Math.floor(cropWidth / 2), Math.floor(metadata_info.height / 2))
     .jpeg({ quality: 70, progressive: true }) // Compress JPEG
     .toBuffer();
   
