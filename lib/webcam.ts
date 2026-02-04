@@ -48,7 +48,7 @@ function formatDateTime(date: Date): {
     date: `${year}-${month}-${day}`,
     time: `${hours}-${minutes}-00`,
     timestamp: date.getTime(),
-    filename: `${year}-${month}-${day}-${hours}-${minutes}-00_oneeighth.jpg`,
+    filename: `${year}-${month}-${day}-${hours}-${minutes}-00_half.jpg`,
   };
 }
 
@@ -77,14 +77,15 @@ export async function downloadImage(metadata: WebcamMetadata): Promise<Buffer> {
     throw new Error("Unable to read image dimensions");
   }
   
-  // Remove leftmost 500px and rightmost 90px, then compress
-  const cropLeft = 500;
-  const cropRight = 90;
+  const cropLeft = 2300;
+  const cropRight = 500;
   const cropWidth = metadata_info.width - cropLeft - cropRight;
-  return await sharp(buffer)
+  const cropped = await sharp(buffer)
     .extract({ left: cropLeft, top: 0, width: cropWidth, height: metadata_info.height })
     .jpeg({ quality: 70, progressive: true }) // Compress JPEG
     .toBuffer();
+  
+  return cropped;
 }
 
 export async function latestWebcamMetadata(): Promise<WebcamMetadata> {
