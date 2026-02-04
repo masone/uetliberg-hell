@@ -3,7 +3,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 
 const visionModel = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })(
-  "gpt-4o-mini",
+  "gpt-4o",
 );
 
 const responseSchema = z.object({
@@ -18,13 +18,10 @@ export async function describeWeatherConditions(
   imageBuffer: Buffer,
 ): Promise<ImageRecognitionResult> {
   const systemPrompt =
-    "You are reviewing the weather conditions on a webcam image.";
-
-  const promptText =
-    `Analyze the image and respond with a single JSON object only (no prose). Shape:\n` +
+    `Analyze the weather conditions on this image and respond with a single JSON object only (no prose). Shape:\n` +
     `{"clear": boolean, "fogClear": boolean, "sunshine": boolean\n` +
     `Rules:\n` +
-    `- fogClear: true only if the forest on top of the mountain range is visible, including the building and the observation tower next to it; they are not obscured by fog. false if the image is white/grey without the required objects visible.\n` +
+    `- fogClear: true only if the mountain top is clear of fog; the building on top of the mountain range and the observation tower next to it are visible. false if the image is white/grey without the required objects visible.\n` +
     `- sunshine: true only if the sky suggests sun (clear/patchy clouds with light on ground); false if heavy overcast/night.\n` +
     `- clear: true only when fogClear AND sunshine are both true; otherwise false.\n` +
     `Keep JSON compact, no trailing text.`;
@@ -34,7 +31,6 @@ export async function describeWeatherConditions(
   )}`;
 
   const userContent: UserContent = [
-    { type: "text", text: promptText },
     { type: "image", image: imageDataUrl },
   ];
 
