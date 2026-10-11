@@ -4,8 +4,8 @@
   "description": "",
   "license": "ISC",
   "author": "masone",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "test": "tsx ./api/run.ts",
     "typecheck": "tsc --noEmit",
