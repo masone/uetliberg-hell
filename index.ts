@@ -1,6 +1,6 @@
-import { describeWeatherConditions } from "./lib/weather-conditions";
-import { latestWebcamMetadata, downloadImage, originalUrl } from "./lib/webcam";
-import { getCache } from "./lib/cache";
+import { describeWeatherConditions } from "./lib/weather-conditions.js";
+import { latestWebcamMetadata, downloadImage, originalUrl } from "./lib/webcam.js";
+import { getCache } from "./lib/cache.js";
 
 const IMAGES_DIR = "images";
 

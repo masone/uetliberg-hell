@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { isHell } from "..";
+import { isHell } from "../index.js";
 
 dotenv.config();
 
