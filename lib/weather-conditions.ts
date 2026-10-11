@@ -3,8 +3,9 @@ import { z } from "zod";
 const DECISIONS_URL = "https://api.openai.com/v1/decisions";
 const DECISIONS_MODEL = "gpt-6-luna";
 
-// Tuned with npm run compare against scripts/labels.json. Borderline sun
-// (low on the horizon, light through clouds) should come out as not hell.
+// Tuned on last winter's cached frames against hand-reviewed labels.
+// Borderline sun (low on the horizon, light through clouds) should come out
+// as not hell.
 export const FOG_THRESHOLD = 0.5;
 export const SUN_THRESHOLD = 0.8;
 
