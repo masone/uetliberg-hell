@@ -17,7 +17,7 @@ function roundTo20Minutes(date: Date): Date {
   return rounded;
 }
 
-function formatDateTime(date: Date): {
+export function formatDateTime(date: Date): {
   date: string;
   time: string;
   timestamp: number;

@@ -8,19 +8,20 @@
   "main": "index.js",
   "scripts": {
     "test": "tsx ./api/run.ts",
+    "compare": "tsx ./scripts/compare.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@ai-sdk/openai": "^4.0.91",
     "@vercel/blob": "^2.8.1",
-    "ai": "^7.0.137",
     "dotenv": "^18.0.7",
     "sharp": "^0.35.5",
     "zod": "^4.6.6"
   },
   "devDependencies": {
+    "@ai-sdk/openai": "^4.0.91",
     "@types/node": "^24.19.2",
+    "ai": "^7.0.137",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
