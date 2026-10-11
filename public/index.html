@@ -41,7 +41,7 @@
   </head>
   <body>
     <div id="content">
-      <h1 id="loading-text" class="loading-text">Loading...</h1>
+      <h1 id="loading-text" class="loading-text">Inspecting webcam...</h1>
     </div>
 
     <script>
@@ -59,13 +59,12 @@
       const shuffled = loadingMessages.slice(2).sort(() => Math.random() - 0.5);
       const displayMessages = [...fixed, ...shuffled];
 
-      let messageIndex = 0;
+      // The first message is already in the markup
+      let messageIndex = 1;
       const loadingElement = document.getElementById("loading-text");
 
-      const initialDelay = 200;
       const cycleDuration = 900;
       const fadeDuration = 150;
-      let startTimeoutId;
       let cycleIntervalId;
       let fadeTimeoutId;
       let isLoading = false;
@@ -88,16 +87,11 @@
         if (!loadingElement) return;
         isLoading = true;
 
-        startTimeoutId = setTimeout(() => {
-          if (!isLoading) return;
-          cycleLoadingText();
-          cycleIntervalId = setInterval(cycleLoadingText, cycleDuration);
-        }, initialDelay);
+        cycleIntervalId = setInterval(cycleLoadingText, cycleDuration);
       }
 
       function stopLoading() {
         isLoading = false;
-        clearTimeout(startTimeoutId);
         clearInterval(cycleIntervalId);
         clearTimeout(fadeTimeoutId);
       }
