@@ -8,9 +8,3 @@ Digital-era "Üetliberg Hell" detection. When Zurich sinks into fog, Üetliberg 
 
 
 ![Hell](./hell.jpg)
-
-## Detection
-
-Each webcam frame is judged by the [OpenAI Decisions API](https://developers.openai.com/api/docs/guides/decisions) (`gpt-6-luna`) with two yes/no questions: is the summit clear of fog, and is the sun out. It's hell when both clear their thresholds (`lib/weather-conditions.ts`). The raw probabilities are cached with every verdict.
-
-To re-tune, add hand-reviewed frames to `scripts/labels.json` (`"YYYY-MM-DD-HH-mm-00": true` for hell) and run `npm run compare`. This scores the current setup and a range of sunshine thresholds against the labels, alongside the old gpt-4o prompt.
