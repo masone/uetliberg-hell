@@ -26,12 +26,8 @@ export async function describeWeatherConditions(
     `- clear: true only when fogClear AND sunshine are both true; otherwise false.\n` +
     `Keep JSON compact, no trailing text.`;
 
-  const imageDataUrl = `data:image/jpeg;base64,${imageBuffer.toString(
-    "base64",
-  )}`;
-
   const userContent: UserContent = [
-    { type: "image", image: imageDataUrl },
+    { type: "file", data: imageBuffer, mediaType: "image/jpeg" },
   ];
 
   const messages: ModelMessage[] = [
