@@ -1,6 +1,8 @@
 import { put, list } from "@vercel/blob";
 
-const ENV = process.env.NODE_ENV || "development";
+// VERCEL_ENV, not NODE_ENV: Vercel sets NODE_ENV=production on preview
+// deployments too, which would let previews write into production's cache.
+const ENV = process.env.VERCEL_ENV || "development";
 
 export async function getCache(
   pathname: string,

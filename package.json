@@ -12,9 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@ai-sdk/openai": "^4.0.91",
     "@vercel/blob": "^2.8.1",
-    "ai": "^7.0.137",
     "dotenv": "^18.0.7",
     "sharp": "^0.35.5",
     "zod": "^4.6.6"
